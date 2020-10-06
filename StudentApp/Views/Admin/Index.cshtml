@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+    <div style="background-color: yellow;width: 400px;height:200px;margin-left:330px;margin-top:290px">
+        <div style="margin-left:30px">
+            <h2>Login</h2>
+            <table>
+                <tr>
+                    <td><b>Username</b>&nbsp;&nbsp;</td>
+                    <td><input type="text" id="uName"style="width:240px"></td>
+                </tr>
+                <tr>
+                    <td><b>Password</b>&nbsp;&nbsp;</td>
+                    <td>
+                        <input type="password" id="pwd" 
+                               minlength="8" required style="width:240px">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top:20px;margin-left:20px">
+             @*<input type="button" style="width:350px;background-color:red;color:white" value="Login" onclick="location.href='/Admin/StudentView' ">*@
+            <input type="button" style="width:350px;background-color:red;color:white" value="Login" onclick="loginUser();">
+        </div>
+        <div style="margin-top:30px;margin-left:20px">
+            @*<input type="button" style="width:350px;background-color:red;color:white" value="Login" onclick="location.href='/Admin/StudentView' ">*@
+            <input type="button" id="btnGoogle" style="width:350px;background-color:red;color:white" value="Login with Google">
+        </div>
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jQuery-2.0.3.min.js"></script>
+    <script>
+   
+        //$('#uName').on("change", function () {
+        //    //debugger;
+            
+        //});
+        //$('#pwd').on("change", function () {
+        //    //debugger;
+            
+        //})
+         function loginUser() {
+            var uName = $("#uName").val();
+            var pwd = $("#pwd").val();
+            if (uName === "" && pwd === "") {
+                console.log(uName);
+                console.log(pwd);
+                alert("Please enter Credentials!")
+            } else {
+                $.ajax({
+                    url: "http://localhost:61420/Admin/requestStudentPage",
+                    type: "Post",
+                    data: JSON.stringify({ 'uName': uName, 'pwd': pwd }),
+                    async: false,
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data, textStatus, jqXHR) {
+                        //debugger;
+                        location.href = data.redirectTo;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        //debugger;
+                        console.log(jqXHR);
+                    }
+                });
+                    
+            }
+         }
+         function isUserRegistered(accessToken) {
+             $.ajax({
+                 url: '/api/Account/UserInfo',
+                 method: 'GET',
+                 headers: {
+                     'content-type': 'application/JSON',
+                     'Authorization': 'Bearer ' + accessToken
+                 },
+                 success: function (response) {
+                     if (response.HasRegistered) {
+                         localStorage.setItem('accessToken', accessToken);
+                         localStorage.setItem('userName', response.Email);
+                         window.location.href = "Data.html";
+                     }
+                     else {
+                         signupExternalUser(accessToken);
+                     }
+                 }
+             });
+         }
+         function getAccessToken() {
+             if (location.hash) {
+                 if (location.hash.split('access_token=')) {
+                     var accessToken = location.hash.split('access_token=')[1].split('&')[0];
+                     if (accessToken) {
+                         isUserRegistered(accessToken);
+                     }
+                 }
+             }
+         }
+         $('#btnGoogle').click(function () {
+             window.location.href = "/api/StudentsAPI/ExternalLogin?provider=Google&response_type=token&client_id=self&redirect_uri=http%3a%2f%2flocalhost%3a61420%2fIndex.cshtml&state=GerGr5JlYx4t_KpsK57GFSxVueteyBunu02xJTak5m01";
+         });
+    </script>
+</body>
+</html>

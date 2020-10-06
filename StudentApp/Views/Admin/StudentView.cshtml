@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Student Management</title>
+</head>
+<body>
+    <div style="background-color:yellow;position:relative;width:1005px;height:40px;text-align:center;margin-top:90px;margin-left:180px">
+        <div style="margin-left:450px">
+            <table>
+                <tr>
+                    <td><img src="../Images/Logo.png" style="width:30px;height:30px"></td>
+                    <td><b>University of Srilanka</b></td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-left:200px"><input type="button" style="border:none" value="Logout" onclick="logOutUser();"></div>
+    </div>
+    <div style="margin-top:-20px;margin-left:180px;background-image: url('../Images/Background.jpg');background-repeat:no-repeat;
+    background-attachment:fixed;background-size: 1195px 600px;opacity:0.7">
+        <div style="margin-left:20px">
+            <h2>All Student List</h2>
+            <p id="students" />
+        </div>
+        <div style="margin-left:10px;">
+            <h2>Search by Student Id</h2>
+            <input type="text" id="studentId" size="4" />
+            <input type="button" value="Search" style="color:white;background-color:red" onclick="findStudent();" />
+            <ul id="student"></ul><br />
+        </div>
+        <div style="margin-top:-30px; margin-left:220px;background-color:red;width:170px;border:1px solid black">
+            <div style="margin-left:10px">@Html.ActionLink("Download Time Table", "downloadFile", "Downloader", null, new { Id = "downloadID", Style = "color:White;text-decoration:none" })</div>
+        </div><br />
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jQuery-2.0.3.min.js"></script>
+    <script>
+        var uri = 'http://localhost:61420/api/StudentsAPI';
+        $(document).ready(function () {
+            //debugger;
+            jQuery.ajax({
+                type: "GET",
+                url: uri,
+                dataType: "json",
+                cache: false,
+                crossDomain: true,
+                processData: true,
+                success: function (data) {
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formatItem(item) }).appendTo($('#students').css("font-weight","Bold"));
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus) {
+                    alert("error");
+                }
+            });
+        });
+        function formatItem(student) {
+            return 'Student Id : ' + student.Id + ' | Student Name : ' + student.Name + ' | School : ' + student.School + ' | Guardian Name : ' + student.GuardianName;
+        }
+        function findStudent() {
+            var id = $('#studentId').val();
+            $.getJSON(uri + '/GetStudent/' + id).done(
+                  function (data) {
+                      $('#student').text(formatItem(data)).css("font-weight","Bold");
+                  }
+                ).fail(
+                    function (jqXHR,textStatus,err) {
+                        $('#student').text('Error: ' + err).css("font-weight", "Bold");
+                    }
+                );
+        }
+        function logOutUser() {
+            console.log("Test");
+                //$.ajax({
+                //    url: "http://localhost:61420/Admin/LogOff",
+                //    type: "GET",
+                //    data:null,
+                //    async: false,
+                //    dataType: "json",
+                //    contentType: 'application/json; charset=utf-8',
+                //    success: function (data, textStatus, jqXHR) {
+                //        //debugger;
+                //        console.log("Test");
+                //        location.href = data.redirectTo;
+                //    },
+                //    error: function (jqXHR, textStatus, errorThrown) {
+                //        //debugger;
+                //        console.log(jqXHR);
+                //    }
+                //});
+                    
+            }
+    </script>
+</body>
+</html>
+
