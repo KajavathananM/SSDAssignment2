@@ -7,4 +7,4 @@
 
 <h2>Testing</h2>
 
-Use  debugger in Visual Studio to monitor values in Owin Implementation of OAuth. Postman a rest client can be used to monitor Http Request or response body for implemented Rest Service.
+Use  debugger in Visual Studio to monitor values in Owin Implementation of OAuth. Postman a  software tool can be used to monitor Http Request or response body for implemented Rest Service API calls.
