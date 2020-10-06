@@ -1,9 +1,9 @@
-<h2>SSDAssignment2</h2>
+<h2>SSDAssignment2:Authenticating Login for Student management App</h2>
 
 
 <h4>Software IDE : Visual Studio</h2>
 <h4>Software Framework ASP.Net MVC</h2>
-<h2>Technologies used : Owin,Jquery and Rest Service</h2>
+<h4>Technologies used : Owin,Jquery and Rest Service</h2>
 
 <h4>Testing</h2>
 
